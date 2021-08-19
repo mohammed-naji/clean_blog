@@ -34,21 +34,27 @@
                 <thead>
                   <tr>
                     <th>ID</th>
-                    <th>Name</th>
-                    <th>Created At</th>
+                    <th>Title</th>
+                    <th>Subtitle</th>
+                    <th>Image</th>
+                    <th>User</th>
+                    <th>Category</th>
                     <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                    @foreach ($categories as $category)
+                    @foreach ($posts as $post)
                     <tr>
-                        <td>{{ $category->id }}</td>
-                        <td>{{ $category->name }}</td>
-                        <td>{{ $category->created_at }}</td>
+                        <td>{{ $post->id }}</td>
+                        <td>{{ $post->title }}</td>
+                        <td>{{ $post->subtitle }}</td>
+                        <td>{{ $post->image }}</td>
+                        <td>{{ $post->user->name }}</td>
+                        <td>{{ $post->category->name }}</td>
                         <td>
-<a href="{{ route('categories.edit', $category->id) }}" class="btn btn-success btn-sm"><i class="fas fa-edit"></i></a>
+<a href="{{ route('posts.edit', $post->id) }}" class="btn btn-success btn-sm"><i class="fas fa-edit"></i></a>
 
-<form class="d-inline" action="{{ route('categories.destroy', $category->id) }}" method="POST">
+<form class="d-inline" action="{{ route('posts.destroy', $post->id) }}" method="POST">
 @csrf
 @method('delete')
 <button onclick="return confirm('are you sure?')" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>

@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Post;
 use Illuminate\Http\Request;
 
-class CategoryController extends Controller
+class PostController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,8 +15,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::latest('id')->paginate(10);
-        return view('admin.categories.index', compact('categories'));
+        $posts = Post::latest('id')->paginate(10);
+        return view('admin.posts.index', compact('posts'));
     }
 
     /**
@@ -25,7 +26,8 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('admin.categories.create');
+        $categories = Category::select(['id', 'name'])->get();
+        return view('admin.posts.create', compact('categories'));
     }
 
     /**
@@ -37,15 +39,18 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|unique:categories|max:255',
+            'title' => 'required|unique:posts,title'
         ]);
 
-        Category::create([
-            'name' => $request->name,
+        // upload the image
+        $ex = $request->file('image')->getClientOriginalExtension();
+        $new_name = 'post_'.time().'.'.$ex;
+        $request->file('image')->move(public_path('upload'), $new_name);
+
+        Post::create([
+
         ]);
 
-        return redirect()->route('categories.index')->with('success', 'Category added succeffuly')
-        ->with('type', 'success');
     }
 
     /**
@@ -67,11 +72,8 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        $category = Category::findOrFail($id);
-        return view('admin.categories.edit', compact('category'));
+        //
     }
-
-
 
     /**
      * Update the specified resource in storage.
@@ -82,14 +84,7 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'name' => 'required|unique:categories|max:255',
-        ]);
-
-        Category::findOrFail($id)->update(['name' => $request->name]);
-
-        return redirect()->route('categories.index')->with('success', 'Category updated succeffuly')
-        ->with('type', 'success');
+        //
     }
 
     /**
@@ -100,9 +95,7 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        // Category::destroy($id);
-        Category::find($id)->delete();
-
-        return redirect()->route('categories.index')->with('success', 'Category deleted succeffuly')->with('type', 'danger');
+        Post::findOrFail($id)->delete();
+        return redirect()->route('posts.index')->with('success', 'Post deleted succeffuly')->with('type', 'danger');
     }
 }
