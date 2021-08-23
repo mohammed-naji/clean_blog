@@ -22,6 +22,14 @@
             </div>
         @endif
 
+        @section('script')
+            @if (session('success'))
+                <script>
+                    toastr.success("{{ session('success') }}")
+                </script>
+            @endif
+        @stop
+
         <div class="card">
             <div class="card-header">
               <h3 class="card-title">All Categories</h3>
@@ -48,7 +56,7 @@
                         <td>{{ $post->id }}</td>
                         <td>{{ $post->title }}</td>
                         <td>{{ $post->subtitle }}</td>
-                        <td>{{ $post->image }}</td>
+                        <td><img width="80" src="{{ asset('upload/'.$post->image) }}" alt=""></td>
                         <td>{{ $post->user->name }}</td>
                         <td>{{ $post->category->name }}</td>
                         <td>

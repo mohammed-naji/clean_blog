@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
 use App\Models\Post;
+use App\Models\Category;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -48,9 +49,17 @@ class PostController extends Controller
         $request->file('image')->move(public_path('upload'), $new_name);
 
         Post::create([
-
+            'title' => $request->title,
+            'slug' => Str::slug($request->title) , // New Title => new-title
+            'subtitle' => $request->subtitle,
+            'content' => $request->content,
+            'image' => $new_name,
+            'category_id' => $request->category_id,
+            'user_id' => 1
         ]);
 
+        return redirect()->route('posts.index')->with('success', 'Post added succeffuly')
+        ->with('type', 'success');
     }
 
     /**
@@ -72,7 +81,9 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        //
+        $categories = Category::select(['id', 'name'])->get();
+        $post = Post::findOrFail($id);
+        return view('admin.posts.edit', compact('categories', 'post'));
     }
 
     /**
@@ -84,7 +95,29 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+        $post = Post::findOrFail($id);
+
+        $new_name = $post->image;
+
+        if($request->has('image')) {
+            // upload the image
+            $ex = $request->file('image')->getClientOriginalExtension();
+            $new_name = 'post_'.time().'.'.$ex;
+            $request->file('image')->move(public_path('upload'), $new_name);
+        }
+
+        Post::find($id)->update([
+            'title' => $request->title,
+            'subtitle' => $request->subtitle,
+            'content' => $request->content,
+            'image' => $new_name,
+            'category_id' => $request->category_id,
+            'user_id' => auth()->user()->id
+        ]);
+
+        return redirect()->route('posts.index')->with('success', 'Post updated succeffuly')
+        ->with('type', 'success');
     }
 
     /**
