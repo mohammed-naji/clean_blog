@@ -4,6 +4,7 @@
       <!-- Add icons to the links using the .nav-icon class
            with font-awesome or any other icon font library -->
 
+           @if (auth()->user()->user_type == 'admin')
            <li class="nav-item">
             <a href="{{ route('dashboard') }}" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
@@ -12,6 +13,8 @@
               </p>
             </a>
           </li>
+           @endif
+
 
       <li class="nav-item">
         <a href="#" class="nav-link">

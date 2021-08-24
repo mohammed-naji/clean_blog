@@ -5,7 +5,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
         <div class="col-sm-6">
-            <h1 class="m-0">All Categories</h1>
+            <h1 class="m-0">All Posts</h1>
         </div><!-- /.col -->
         </div>
     </div>
@@ -32,7 +32,7 @@
 
         <div class="card">
             <div class="card-header">
-              <h3 class="card-title">All Categories</h3>
+              <h3 class="card-title">All Posts</h3>
 
 
             </div>
